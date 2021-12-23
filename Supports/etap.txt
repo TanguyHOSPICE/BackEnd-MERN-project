@@ -1,0 +1,42 @@
+POWERSHELL:
+***************
+1-npm init -y
+(installation npm)
+2-npm i --save express nodemon dotenv
+(installation express/nodemon & dotenv ds dossier PACKAGE.json)
+dotenv = .env = fichier permettant de stocker des variables d'environnement
+3-Creation dossier index.js
+(va tout diriger pet etre appellé server.js)
+4-Ds PACKAGE.json on change le script par:
+"start": "nodemon server"
+(Qd on va dire npm start execute nodemon server.js c'est comme si on tapais ds la console à chq fois nodemon server.js mais ici on le fera une seul fois acnpm start)
+5-npm start
+6-[nodemom] watching  -------------vid----10m46s
+(nodemon suivra tous les changements)
+*****************
+7-Def const express ds server.js: const express = require('express');
+(node étant un langage basique le FRAMEWORK express permet de se rapprocher du langage "humain")
+8-const app = express();
+(Qd on parlera de APP on exécutera express)
+9-Etablissement du port (ici 5000) sur lequel on écoutera APP avec une fonction callBack:
+app.listen(5000, () => {
+    console.log('Listening on port 5000');
+});
+*****************
+10-Creation variable d'environement a la racine (config/.env):
+PORT=5000
+(Avantage: Qd on commit le projet les éléments(n°port/clés....) à l'intérieur ne seront pas vu d'ou ./.gitignore)
+11-Creation dossier gitignore à la racine (.gitignore) ----------vid---14m12s:
+/not_modules (=ne commit pas)
+/config/.env (=ne commit pas)
+12-On récupère l'info sur le n° port ds server.js:
+require('dotenv').config({path: './config/.env'})
+le path donne le chemin ou trouver ici les var d'env. en utilisant la methode (en 'require') le framework dotenv
+
+remplacement du n°5000 par process.env.PORT pour une injection du port de façon dynamique:
+app.listen(process.env.PORT, () => {
+    console.log(`Listening on port ${process.env.PORT}`);
+});
+*****************
+13-Config de Bdd:
+ici cloud.mongodb.com
