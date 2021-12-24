@@ -40,10 +40,30 @@ app.listen(process.env.PORT, () => {
 *****************
 13-Config de Bdd-------vid--16m17s:
 ici cloud.mongodb.com
-cluster connect
-ip
-id+password
-choose a connection:
-i do have mongodb
-mongodb compass
-copy du lien ds mongodbcompass
+*cluster-connect
+*ip
+*id+password
+*choose a connection:
+*i do have mongodb
+*mongodb compass
+*copy du lien ds mongodbcompass-------vid--18m29s
+*******************
+14-Connection projet à Bdd
+Creation ds config/db.js
+15-Powershell--installation mongoose = biblio mongodb
+npm i -s mongoose
+16-Déclaration mongoose ds db.js puis appel
+const mongoose = require("mongoose");
+
+mongoose
+    .connect('mongodb+srv://hospice:<password>@cluster0.ocxwj.mongodb.net/test'
+    {
+        useNewUrlParser: true, // Elements fournit par la doc pour que ca marche
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+    }
+    ) //test= nom de la Bdd qui va être incrémenté
+    .then({} => console.log('Connected to MongoDB');) //Pour confirmer la connection
+    .catch({} => console.log('Failed to connect to MongoDB', err)) //Pr transmettre l'erreur---vid--21m55s
+
