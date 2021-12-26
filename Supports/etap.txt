@@ -2,22 +2,32 @@ POWERSHELL:
 ***************
 1-npm init -y
 (installation npm)
+
 2-npm i --save express nodemon dotenv
 (installation express/nodemon & dotenv ds dossier PACKAGE.json)
 dotenv = .env = fichier permettant de stocker des variables d'environnement
+
 3-Creation dossier server.js
 (va tout diriger et peut etre appellé index.js)
+
 4-Ds PACKAGE.json on change le script par:
 "start": "nodemon server"
 (Qd on va dire npm start execute nodemon server.js c'est comme si on tapais ds la console à chq fois nodemon server.js mais ici on le fera une seul fois acnpm start)
+
 5-npm start
+
 6-[nodemom] watching  -------------vid----10m46s
 (nodemon suivra tous les changements)
+
 *****************
 7-Def const express ds server.js: const express = require('express');
 (node étant un langage basique le FRAMEWORK express permet de se rapprocher du langage "humain")
+
+
 8-const app = express();
 (Qd on parlera de APP on exécutera express)
+
+
 9-Etablissement du port (ici 5000) sur lequel on écoutera APP avec une fonction callBack:
 app.listen(5000, () => {
     console.log('Listening on port 5000');
@@ -26,17 +36,23 @@ app.listen(5000, () => {
 10-Creation variable d'environement a la racine (config/.env):
 PORT=5000
 (Avantage: Qd on commit le projet les éléments(n°port/clés....) à l'intérieur ne seront pas vu d'ou ./.gitignore)
+
+
 11-Creation dossier gitignore à la racine (.gitignore) ----------vid---14m12s:
 /node_modules (=ne commit pas)
 /config/.env (=ne commit pas)
+
+
 12-On récupère l'info sur le n° port ds server.js:
 require('dotenv').config({path: './config/.env'})
 le path donne le chemin ou trouver ici les var d'env. en utilisant la methode (en 'require') le framework dotenv
 
-remplacement du n°5000 par process.env.PORT pour une injection du port de façon dynamique:
+remplacement du n°5000 par process.env.PORT pour une injection du port de façon dynamique(DOIT ETRE LU A LA TOUTE FIN):
+//**********Server
 app.listen(process.env.PORT, () => {
     console.log(`Listening on port ${process.env.PORT}`);
 });
+
 *****************
 13-Config de Bdd-------vid--16m17s:
 ici cloud.mongodb.com
@@ -50,8 +66,10 @@ ici cloud.mongodb.com
 *******************
 14-Connection projet à Bdd
 Creation ds config/db.js
+
 15-Powershell--installation mongoose = biblio mongodb
 npm i -s mongoose
+
 16-Déclaration mongoose ds db.js puis appel
 const mongoose = require("mongoose");
 
@@ -66,6 +84,7 @@ mongoose
     ) //test= nom de la Bdd qui va être incrémenté
     .then(()=> console.log('Connected to MongoDB');) //Pour confirmer la connection
     .catch((err)=> console.log('Failed to connect to MongoDB', err)) //Pr transmettre l'erreur---vid--21m55s
+
 17-On récupère l'info dans index.json et on indique qu'elle se trouve ds ./config/db.js:
 require('.config/db')
 *********************
@@ -73,5 +92,42 @@ require('.config/db')
 mongoose
     .connect('mongodb+srv://' + process.env.DB_USER_PASS + '@cluster0.ocxwj.mongodb.net/mern-project',
     {.......}......
-19-Creation des utilisateurs ds un CRUD----vid--23m11s
+*************************
+19-Creation des utilisateurs ds un MODELS (BUG video telechargement ./models/user.model.js)----vid--30m
+
+20-Creation routes (ajout ds server.js):
+
+const userRoutes = require('./routes/user.routes');
+
+//***** Routes
+app.use('/api/user', userRoutes) //Qd on aura "/api/user" on appel userRoutes
+
+21-Création utilisateur:
+
+ds ./routes/user.routes.js:
+---------------------------
+const router = require('express').Router();
+const authController = require('../controllers/auth.controller') //Appel du ../controllers/auth.controller
+
+router.post("/register", authController.signUp); //on va chercher dans l'api/user/register on déclenche dans le dossier authController la fonction signUp
+
+module.exports = router;
+
+ds ../controllers/auth.controller (Acceuillera seulement ce qui attrait à l'utilisateur et sa connexion et déconnexion):
+
+    a)une fonction async signUp exporté avec une request et une response:
+----------------------------------------------------------------------------
+module.exports.signUp = async (req, res) => {
+    const {pseudo, email, password} = req.body; //Lors du signUp ds 1 1ier tps on ne dde que pseudo...
+
+    try {
+        const user = await UserModel.create({pseudo, email, password});
+        res.status(201).json({user: user._id}) //si reponse ok renvoi l'id...
+    }
+    catch(err) {
+        res.status(200).send({ err }) //si erreur renvoi l'erreur
+    }
+}
+
+22-Telechargement postman pour simuler le front pdt tout le dvpt du Back----vid--37m54s
 
